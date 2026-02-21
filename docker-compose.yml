@@ -1,0 +1,69 @@
+version: "3.9"
+
+services:
+
+  api-gateway:
+    build: ./backend/api-gateway
+    env_file:
+      - ./backend/api-gateway/.env
+    ports:
+      - "5000:5000"
+    depends_on:
+      - user-service
+      - cart-service
+      - item-service
+      - payment-service
+      - notification-service
+      - order-service
+
+  user-service:
+    build: ./backend/user-service
+    env_file:
+      - ./backend/user-service/.env
+    ports:
+      - "5001:5001"
+
+  cart-service:
+    build: ./backend/cart-service
+    env_file:
+      - ./backend/cart-service/.env
+    ports:
+      - "5002:5002"
+
+  item-service:
+    build: ./backend/items-service
+    env_file:
+      - ./backend/items-service/.env
+    ports:
+      - "5003:5003"
+
+  payment-service:
+    build: ./backend/payment-service
+    env_file:
+      - ./backend/payment-service/.env
+    ports:
+      - "5004:5004"
+
+  notification-service:
+    build: ./backend/notification-service
+    env_file:
+      - ./backend/notification-service/.env
+    ports:
+      - "5005:5005"
+  order-service:
+    build: ./backend/order-service
+    env_file:
+      - ./backend/order-service/.env
+    ports:
+      - "5006:5006"
+
+
+
+  frontend:
+    build: ./frontend
+    env_file:
+      - ./frontend/.env
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api-gateway
