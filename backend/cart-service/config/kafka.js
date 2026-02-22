@@ -29,7 +29,7 @@ const connectProducer = async () => {
 
 
 const consumer = kafka.consumer({
-  groupId: "payment-group",
+  groupId: "cart-group",
 });
 
 const connectConsumer = async () => {

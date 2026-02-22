@@ -41,15 +41,12 @@ export const updateStatus=async (req,res)=>{
 
 export const getOrders=async (req,res)=>{
     try{
-        const {start,limit}=req.query;
+        
         const {userId}=req.user;
-        if(start<=0||!start||!limit||limit<=0||!userId)
+        if(!userId)
             return sendResponse(res,400,false,"client error");
-        const allOrders=await orderModel.find({userId}).skip((start-1)*limit).limit(limit).lean();
+        const allOrders=await orderModel.find({userId});
         return sendResponse(res,200,true,"successfully fetched data",allOrders)
-
-
-
     }
     catch(err){
         console.log("server error",err);

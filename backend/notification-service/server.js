@@ -1,11 +1,16 @@
 
 import express from 'express';
 import { PORT } from './config/server.config.js';
-import { startNotificationConsumer } from './consumers/email.consumer.js';
+import { connectConsumer, connectProducer } from './config/kafka.js';
+import { consumeNotificationEvents } from './kafka/notification.consumer.js';
 const app=express();
 app.use(express.json());
+connectConsumer();
+connectProducer();
 
-startNotificationConsumer();
+consumeNotificationEvents();
+
+
 
 
 

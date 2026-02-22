@@ -4,7 +4,7 @@ import sendResponse from "../utils/sendResponse.js";
 
 export const getCartItems = async (req, res) => {
     try {
-        console.log("llll")
+      
         const cartItems = await Cart.find({userId:req.user.userId}).lean();
         return sendResponse(res, 200, true, "successfully fetched cart Items", cartItems);
 

@@ -6,6 +6,8 @@ import {
 } from 'lucide-react';
 import { updateProfile } from '../api/userApi';
 import AddItems from '../components/AddItems';
+import { Link } from 'react-router-dom';
+
 
 const ProfilePage = ({ profile }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -135,18 +137,24 @@ const ProfilePage = ({ profile }) => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-              {[
-                { label: "Orders", value: "24" },
-                { label: "Points", value: "1,250" },
-                { label: "Reviews", value: "12" },
-              ].map((stat, i) => (
-                <div key={i} className="bg-white p-6 rounded-[2rem] text-center border border-slate-100 shadow-sm">
-                  <p className="text-2xl font-black mb-1">{stat.value}</p>
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-tighter">{stat.label}</p>
-                </div>
-              ))}
-            </div>
+           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+  {[
+    { label: "Orders", value: "24", link: "order" },
+    { label: "Points", value: "1,250", link: "points" },
+    { label: "Reviews", value: "12", link: "reviews" },
+  ].map((stat, i) => (
+    <Link
+      to={"/" + stat.link}
+      key={i}
+      className="bg-white p-6 rounded-[2rem] text-center border border-slate-100 shadow-sm"
+    >
+      <p className="text-2xl font-black mb-1">{stat.value}</p>
+      <p className="text-xs font-bold text-slate-400 uppercase tracking-tighter">
+        {stat.label}
+      </p>
+    </Link>
+  ))}
+</div>
           </div>
           
 

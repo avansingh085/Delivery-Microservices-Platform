@@ -22,7 +22,16 @@ const orderSchema = new mongoose.Schema(
       min: 0,
       required: true,
     },
-    status:{
+    paymentId:{
+      type:String,
+      required:true
+    },
+    paymentStatus:{
+      type:String,
+      default:"pending"
+
+    },
+    orderStatus:{
         type:String,
         default:"pending"
     }

@@ -12,6 +12,7 @@ import { profile } from "./api/userApi";
 import ItemPage from "./pages/ItemPage";
 import CartPage from "./pages/CartPage";
 import { Success } from "./utils/toast";
+import OrderPage from "./pages/OrderPage";
 
 function App() {
   const [userData, setUserData] = useState(undefined); 
@@ -55,6 +56,7 @@ function App() {
 
         
           <Route element={<AuthRoute isPrivate={true} user={userData} />}>
+            <Route path="/order" element={<OrderPage/>}/>
             <Route path="/profile" element={<ProfilePage profile={userData} />} />
             <Route path="/cart" element={<CartPage/>}/>
           </Route>

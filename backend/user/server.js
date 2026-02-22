@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { globalErrorHandler } from './middlewars/error.middlewars.js';
 import { connectProducer, connectConsumer } from './config/kafka.js';
+import { sendNotificationEvent } from './kafka/item.producer.js';
 
 const app = express();
 connectDB();
@@ -22,8 +23,6 @@ app.use(cors({
 }));
 
 
-app.use(cors({ origin: 'http://localhost:5173' }));
-
 app.get('/health', (req, res) => {
   res.status(200).send('OK');
 });
@@ -32,6 +31,7 @@ app.get('/health', (req, res) => {
 app.use('/', userRoutes);
 app.use('/auth', authRoutes);
 app.use(globalErrorHandler);
+
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

@@ -29,12 +29,12 @@ const connectProducer = async () => {
 
 
 const consumer = kafka.consumer({
-  groupId: "payment-group",
+  groupId: "item-group",
 });
 
-const connectConsumer = async () => {
+ const connectConsumer = async () => {
   await consumer.connect();
   console.log("Consumer connected");
 };
 
-export { producer, consumer, connectProducer, connectConsumer };
+export { producer, consumer,connectProducer , connectConsumer};

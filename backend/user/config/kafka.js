@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -29,12 +30,12 @@ const connectProducer = async () => {
 
 
 const consumer = kafka.consumer({
-  groupId: "my-consumer-group",
+  groupId: "user-group",
 });
 
- const connectConsumer = async () => {
+const connectConsumer = async () => {
   await consumer.connect();
   console.log("Consumer connected");
 };
 
-export { producer, consumer,connectProducer , connectConsumer};
+export { producer, consumer, connectProducer, connectConsumer };

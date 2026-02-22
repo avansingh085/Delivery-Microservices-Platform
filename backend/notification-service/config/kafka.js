@@ -29,7 +29,7 @@ const connectProducer = async () => {
 
 
 const consumer = kafka.consumer({
-  groupId: "my-consumer-group",
+  groupId: "notification-group",
 });
 
  const connectConsumer = async () => {

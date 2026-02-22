@@ -4,8 +4,13 @@ import cartRoutes from '../cart-service/routes/cart.routes.js';
 import cookieParser from 'cookie-parser';
 import { globalErrorHandler } from './middlewars/error.middlewars.js';
 import connectDB from './config/db.js';
+import { connectConsumer, connectProducer } from './config/kafka.js';
+import { consumeCartEvents } from './kafka/cart.consumer.js';
 const app=express();
 connectDB()
+connectProducer();
+connectConsumer();
+consumeCartEvents();
 app.use(cookieParser());
 app.use(express.json());
 app.use(cors({

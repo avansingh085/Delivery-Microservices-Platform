@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import apiClient from '../api/apiClient';
 import { Error, Success } from '../utils/toast';
+import { createOrder } from '../api/orderApi';
 
 const Checkout = ({ amount, cartItems }) => {
   const [paymentMethod, setPaymentMethod] = useState('online'); 
@@ -25,7 +26,6 @@ const Checkout = ({ amount, cartItems }) => {
 
     try {
      
-      
       const res = await apiClient.post('/payments/checkout',
        { amount, paymentMethod: 'ONLINE', items: cartItems },
       );
@@ -36,20 +36,21 @@ const Checkout = ({ amount, cartItems }) => {
         key: 'rzp_test_SImjKLecBguwt4',
         amount: orderData.amount,
         currency: orderData?.currency||"INR",
-        name: 'Smart Interview Prep Tracker',
-        description: 'Premium Plan Upgrade',
+        name: 'Delivery System',
+        description: 'item buy',
         order_id: orderData.id,
         handler: async function (response) {
-           await apiClient.post('/payments/verify',response);
+           await apiClient.post('/payments/verify',{...response,cartItems});
           console.log("Payment Successful!", response);
           Success(`Online Payment Successful! Payment ID: ${response.razorpay_payment_id}`)
         
         },
         theme: { color: '#3399cc' },
       };
-
+      
       const rzp = new window.Razorpay(options);
       rzp.on('payment.failed', function (response) {
+
         Error(`Payment failed: ${response.error.description}`)
        
       });

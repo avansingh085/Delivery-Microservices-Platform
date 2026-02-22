@@ -6,12 +6,17 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-
+*.pem
+*.key
+*.cert
 node_modules
 dist
 dist-ssr
 *.local
 .env
+config/*.pem
+config/*.key
+config/*.cert
 
 # Editor directories and files
 .vscode/*

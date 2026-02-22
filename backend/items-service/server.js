@@ -4,10 +4,15 @@ import connectDB from './config/db.js';
 import cors from 'cors';
 import ItemRoutes from './routes/item.routes.js';
 import cookieParser from 'cookie-parser';
+import { connectConsumer, connectProducer } from './config/kafka.js';
+import { consumeItemEvents } from './kafka/item.consumer.js';
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
 connectDB();
+connectConsumer();
+connectProducer();
+consumeItemEvents();
 app.use(cors({
     origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
