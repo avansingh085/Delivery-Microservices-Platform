@@ -26,7 +26,7 @@ export const consumeOrderEvents = async () => {
             price: item.price,
             paymentId,
             paymentStatus: "SUCCESS",
-            status: "SUCCESS"
+            orderStatus: "accepted"
           }));
 
           await orderModel.insertMany(orders);

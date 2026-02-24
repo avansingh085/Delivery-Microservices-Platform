@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import AutoLocationSender from './AutoLocationSender';
 
 const Header = ({ user, cartCount = 0 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -7,7 +8,7 @@ const Header = ({ user, cartCount = 0 }) => {
   return (
     <nav className="w-full bg-white border-b border-gray-100 sticky top-0 z-[1000]">
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 py-6 flex items-center justify-between">
-        
+        <AutoLocationSender/>
       
         <Link to="/" className="flex items-center gap-3">
           <div className="bg-black text-white px-3 py-1 font-black text-2xl tracking-tighter">

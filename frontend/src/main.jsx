@@ -8,10 +8,10 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  <>
+  
     <Toaster position="top-center" richColors />
      <ToastContainer />
    <App/>
-   
-  </StrictMode>,
+   </>
 )

@@ -8,11 +8,13 @@ import cors from 'cors';
 import { globalErrorHandler } from './middlewars/error.middlewars.js';
 import { connectProducer, connectConsumer } from './config/kafka.js';
 import { sendNotificationEvent } from './kafka/item.producer.js';
+import { consumeUserEvents } from './kafka/item.consumer.js';
 
 const app = express();
 connectDB();
 connectProducer();
 connectConsumer();
+
 app.use(cookieParser());
 app.use(express.json());
 app.use(cors({
@@ -21,7 +23,7 @@ app.use(cors({
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
-
+consumeUserEvents();
 
 app.get('/health', (req, res) => {
   res.status(200).send('OK');

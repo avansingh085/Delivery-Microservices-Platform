@@ -1,9 +1,8 @@
-import { consumer, producer } from "../config/kafka.js";
+import { consumer } from "../config/kafka.js";
 import { sendNotificationEvent } from "./item.producer.js";
-import  User from '../models/user.models.js';
-export const consumeUserEvents = async () => {
- 
+import User from "../models/user.models.js";
 
+export const consumeUserEvents = async () => {
   await consumer.subscribe({
     topic: "user-topic",
     fromBeginning: false,
@@ -11,13 +10,22 @@ export const consumeUserEvents = async () => {
 
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
-      const data = JSON.parse(message.value.toString());
-      console.log("notification event received:", data);
-      
-      const {events,userId}=data;
-      const user=await User.findById(userId);
-      
-      sendNotificationEvent(data.events,{email:user.email,userId});
+      try {
+        const data = JSON.parse(message.value.toString());
+        console.log("User event received:", data);
+
+        const user = await User.findById(data.data.userId);
+        if (!user) {
+          console.warn("User not found for ID:", data.data.userId);
+          return;
+        }
+
+       
+        await sendNotificationEvent(data.event, { email: user.email, userId: user._id });
+
+      } catch (err) {
+        console.error("Error processing user event:", err);
+      }
     },
   });
 };

@@ -12,6 +12,11 @@ const orderSchema = new mongoose.Schema(
       ref: "Item",  
       required: true,
     },
+    deliveryPartnerId:{
+       type: mongoose.Schema.Types.ObjectId,
+      ref: "deliveryPartner",  
+      default:null
+    },
     quantity: {
       type: Number,
       min: 1,  
@@ -31,10 +36,19 @@ const orderSchema = new mongoose.Schema(
       default:"pending"
 
     },
-    orderStatus:{
-        type:String,
-        default:"pending"
-    }
+    status: {
+    type: String,
+    enum: [
+      "pending",
+      "accepted",
+      "preparing",
+      "picked",
+      "on_the_way",
+      "delivered",
+      "cancelled"
+    ],
+    default: "pending"
+  },
   },
   { timestamps: true }
 );

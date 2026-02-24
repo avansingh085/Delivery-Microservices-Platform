@@ -1,13 +1,9 @@
 import { producer } from "../config/kafka.js";
 
-
-
-export const sendNotificationEvent = async (event, data) => {
+export const sendEvent = async (topic, event, data) => {
   try {
-
-    console.log(event,data)
     await producer.send({
-      topic: "notification-topic",
+      topic,
       messages: [
         {
           value: JSON.stringify({
@@ -19,9 +15,8 @@ export const sendNotificationEvent = async (event, data) => {
       ],
     });
 
-    console.log("notification event sent");
+    console.log(`${topic} event sent`);
   } catch (err) {
     console.error("Kafka Producer Error:", err);
   }
 };
-
