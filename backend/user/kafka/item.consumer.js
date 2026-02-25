@@ -20,7 +20,7 @@ export const consumeUserEvents = async () => {
           return;
         }
 
-       
+
         await sendNotificationEvent(data.event, { email: user.email, userId: user._id });
 
       } catch (err) {

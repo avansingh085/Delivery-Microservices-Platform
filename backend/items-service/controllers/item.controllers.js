@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import Items from "../models/item.models.js";
 import sendResponse from "../utils/sendResponse.js";
+import { RedisGet, RedisSet } from '../config/redis.config.js';
 
 
 
@@ -25,8 +26,17 @@ export const addNewItem = async (req, res) => {
 export const getItemById = async (req, res) => {
     try {
         const { id } = req.params;
-        const isExistItem = await Items.findById(id).lean();
+      
+        let isExistItem = await RedisGet(`item_by_id_${id}`);
+      
+
+        if(!isExistItem)
+        {
+        isExistItem=await Items.findById(id).lean();
+    
+        }
         if (isExistItem) {
+           await  RedisSet(`item_by_id_${id}`,isExistItem);
             return sendResponse(res, 200, true, "item successfully fetched!", isExistItem);
         }
         return sendResponse(res, 400, false, "invalid item id or item not found!");
@@ -51,6 +61,7 @@ export const updateItem = async (req, res) => {
             isExistItem.stock = stock;
             isExistItem.image = image;
             await isExistItem.save();
+             await  RedisSet(`item_by_id_${itemId}`,isExistItem);
             return sendResponse(res, 200, true, "item updated successfully!");
         }
         else {
@@ -89,7 +100,9 @@ export const deleteItem = async (req, res) => {
     try {
         const itemId = req.query.id;
         const isDel = await Items.findByIdAndDelete(itemId);
+        
         if (isDel) {
+            await RedisSet(`item_by_id_${itemId}`,null)
             console.log("item successfully deleted");
             return sendResponse(res, 200, true, "item successfully deleted");
         }

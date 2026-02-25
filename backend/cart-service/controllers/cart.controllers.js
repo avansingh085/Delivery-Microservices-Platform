@@ -1,3 +1,4 @@
+import { RedisGet, RedisSet } from "../config/redis.config.js";
 import Cart from "../models/cart.models.js";
 import sendResponse from "../utils/sendResponse.js";
 
@@ -5,7 +6,14 @@ import sendResponse from "../utils/sendResponse.js";
 export const getCartItems = async (req, res) => {
     try {
       
-        const cartItems = await Cart.find({userId:req.user.userId}).lean();
+        let cartItems =await RedisGet(`cart_items_${req.user.userId}`);
+        
+        if(!cartItems)
+        {
+            cartItems=await Cart.find({userId:req.user.userId}).lean();
+            await RedisSet(`cart_items_${req.user.userId}`,cartItems);
+        }
+
         return sendResponse(res, 200, true, "successfully fetched cart Items", cartItems);
 
     }
@@ -27,6 +35,8 @@ export const addToCart = async (req, res) => {
 
         const newCart = await Cart.create({ itemId, userId});
         console.log(newCart,"cart created");
+       const  cartItems=await Cart.find({userId:req.user.userId}).lean();
+            await RedisSet(`cart_items_${req.user.userId}`,cartItems);
 
         return sendResponse(res, 201, true, "new item added to the cart successfully!", { _id: newCart._id, itemId, quantity:1, userId});
     }
@@ -55,6 +65,8 @@ export const updateCartItem = async (req, res) => {
             return sendResponse(res, 200, true, "cart item updated successfully!");
 
         }
+         const cartItems=await Cart.find({userId:req.user.userId}).lean();
+         await RedisSet(`cart_items_${req.user.userId}`,cartItems);
         return sendResponse(res, 400, false, "failed to update cart invalid item Id or item not found!");
 
 
@@ -78,6 +90,8 @@ export const deleteCartItem = async (req, res) => {
         if (isDel) {
             return sendResponse(res, 200, true, "cart item successfully deleted!");
         }
+        const cartItems=await Cart.find({userId:req.user.userId}).lean();
+            await RedisSet(`cart_items_${req.user.userId}`,cartItems);
         return sendResponse(res, 400, false, "failed to delete cart item!");
 
     }

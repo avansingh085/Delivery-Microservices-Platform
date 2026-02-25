@@ -5,7 +5,7 @@ import { producer } from "../config/kafka.js";
 export const sendNotificationEvent = async (event, data) => {
   try {
 
-    console.log(event,data)
+    console.log(event, data)
     await producer.send({
       topic: "notification-topic",
       messages: [

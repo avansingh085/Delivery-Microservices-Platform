@@ -3,5 +3,8 @@ dotenv.config();
 
 export const {
     MONGO_URI,
-    JWT_ACCESS_SECRET
+    JWT_ACCESS_SECRET,
+    REDIS_PASS,
+    REDIS_ENDPOINT
+
 }=process.env;

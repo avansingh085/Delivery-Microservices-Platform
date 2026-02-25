@@ -7,7 +7,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { globalErrorHandler } from './middlewars/error.middlewars.js';
 import { connectProducer, connectConsumer } from './config/kafka.js';
-import { sendNotificationEvent } from './kafka/item.producer.js';
+
 import { consumeUserEvents } from './kafka/item.consumer.js';
 
 const app = express();

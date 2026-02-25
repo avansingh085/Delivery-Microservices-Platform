@@ -12,8 +12,7 @@ import {
 import sendMail from "../utils/sendMail.js";
 import generateOTP from "../utils/generateOtp.js";
 import sendResponse from "../utils/sendResponce.js";
-import { producer } from "../config/kafka.js";
-import { sendMessage } from "../producers/producerMessage.js";
+
 
 export const register = async (req, res, next) => {
   try {
@@ -85,7 +84,7 @@ export const login = async (req, res, next) => {
 
     user.refreshToken = refreshToken;
     await user.save({ validateBeforeSave: false });
-    sendMessage("notification-topic",{email,mess:"login successfully!"})
+   
     res
       .cookie("accessToken", accessToken, accessCookieOptions)
       .cookie("refreshToken", refreshToken, refreshCookieOptions)
