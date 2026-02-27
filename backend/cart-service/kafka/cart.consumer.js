@@ -1,5 +1,5 @@
 import { consumer } from "../config/kafka.js";
-import Cart from "../models/cart.models.js";
+import Cart from "../models/cart.model.js";
 
 export const consumeCartEvents = async () => {
 

@@ -1,105 +1,68 @@
 import { RedisGet, RedisSet } from "../config/redis.config.js";
 import Cart from "../models/cart.models.js";
-import sendResponse from "../utils/sendResponse.js";
+import asyncHandler from "../utils/asyncHandler.js";
+import { sendSuccess, sendError } from "../utils/response.js";
+import HttpStatus from "../utils/httpStatus.js";
 
+export const getCartItems = asyncHandler(async (req, res) => {
+  const userId = req.user.userId;
 
-export const getCartItems = async (req, res) => {
-    try {
-      
-        let cartItems =await RedisGet(`cart_items_${req.user.userId}`);
-        
-        if(!cartItems)
-        {
-            cartItems=await Cart.find({userId:req.user.userId}).lean();
-            await RedisSet(`cart_items_${req.user.userId}`,cartItems);
-        }
+  let cartItems = await RedisGet(`cart_items_${userId}`);
+  if (!cartItems) {
+    cartItems = await Cart.find({ userId }).lean();
+    await RedisSet(`cart_items_${userId}`, cartItems);
+  }
 
-        return sendResponse(res, 200, true, "successfully fetched cart Items", cartItems);
+  return sendSuccess(res, cartItems, HttpStatus.SUCCESS, "Cart items fetched successfully");
+});
 
-    }
-    catch (err) {
-        console.log("failed to fetch cart items", err);
-        return sendResponse(res, 500, false, " server error during cart items fetch!");
-    }
-}
+export const addToCart = asyncHandler(async (req, res) => {
+  const { itemId } = req.params;
+  const userId = req.user.userId;
 
+  if (!itemId) return sendError(res, "Invalid item", HttpStatus.BAD_REQUEST);
 
+  const newCart = await Cart.create({ itemId, userId });
 
-export const addToCart = async (req, res) => {
-    try {
+  const cartItems = await Cart.find({ userId }).lean();
+  await RedisSet(`cart_items_${userId}`, cartItems);
 
-        const { itemId } = req.params;
-        const userId = req.user.userId;
-        if (!itemId)
-            return sendResponse(res, 400, false, "invalid item or quantity");
+  return sendSuccess(
+    res,
+    { _id: newCart._id, itemId, quantity: 1, userId },
+    HttpStatus.CREATED,
+    "Item added to cart successfully"
+  );
+});
 
-        const newCart = await Cart.create({ itemId, userId});
-        console.log(newCart,"cart created");
-       const  cartItems=await Cart.find({userId:req.user.userId}).lean();
-            await RedisSet(`cart_items_${req.user.userId}`,cartItems);
+export const updateCartItem = asyncHandler(async (req, res) => {
+  const userId = req.user.userId;
+  const itemId = req.params.itemId;
+  const { quantity } = req.body;
 
-        return sendResponse(res, 201, true, "new item added to the cart successfully!", { _id: newCart._id, itemId, quantity:1, userId});
-    }
-    catch (err) {
-        console.log("failed to add new item to the card!", err);
-        return sendResponse(res, 500, false, "failed to add new item t the card!");
+  if (!quantity || quantity <= 0) return sendError(res, "Invalid quantity must be positive", HttpStatus.BAD_REQUEST);
 
-    }
-}
+  const cartItem = await Cart.findOne({ userId, itemId });
+  if (!cartItem) return sendError(res, "Item not found in cart", HttpStatus.NOT_FOUND);
 
+  cartItem.quantity = quantity;
+  await cartItem.save();
 
-export const updateCartItem = async (req, res) => {
-    try {
-        const userId = req.user.userId;
-        const itemId = req.params.itemId;
-        
-        const { quantity } = req.body;
-        if (quantity <= 0) {
-            return sendResponse(res, 400, false, "invalid quantity must be +ve");
-        }
+  const cartItems = await Cart.find({ userId }).lean();
+  await RedisSet(`cart_items_${userId}`, cartItems);
 
-        const isExits = await Cart.findOne({ userId, itemId });
-        if (isExits) {
-            isExits.quantity = quantity;
-            await isExits.save();
-            return sendResponse(res, 200, true, "cart item updated successfully!");
+  return sendSuccess(res, cartItem, HttpStatus.SUCCESS, "Cart item updated successfully");
+});
 
-        }
-         const cartItems=await Cart.find({userId:req.user.userId}).lean();
-         await RedisSet(`cart_items_${req.user.userId}`,cartItems);
-        return sendResponse(res, 400, false, "failed to update cart invalid item Id or item not found!");
+export const deleteCartItem = asyncHandler(async (req, res) => {
+  const userId = req.user.userId;
+  const itemId = req.params.itemId;
 
+  const deletedItem = await Cart.findOneAndDelete({ userId, itemId });
+  if (!deletedItem) return sendError(res, "Failed to delete cart item", HttpStatus.BAD_REQUEST);
 
-    }
-    catch (err) {
+  const cartItems = await Cart.find({ userId }).lean();
+  await RedisSet(`cart_items_${userId}`, cartItems);
 
-        console.log("error during update cart item", err);
-        return sendResponse(res, 500, true, "server error");
-
-    }
-}
-
-
-
-export const deleteCartItem = async (req, res) => {
-    try {
-        const userId = req.user.userId;
-
-        const itemId = req.params.itemId;
-        const isDel = await Cart.findByIdAndDelete({userId,itemId});
-        if (isDel) {
-            return sendResponse(res, 200, true, "cart item successfully deleted!");
-        }
-        const cartItems=await Cart.find({userId:req.user.userId}).lean();
-            await RedisSet(`cart_items_${req.user.userId}`,cartItems);
-        return sendResponse(res, 400, false, "failed to delete cart item!");
-
-    }
-    catch (err) {
-
-        console.log("error during item delete", err);
-        return sendResponse(res, 500, true, "server err during cart deletion!");
-    }
-}
-
-
+  return sendSuccess(res, deletedItem, HttpStatus.SUCCESS, "Cart item deleted successfully");
+});
