@@ -20,10 +20,12 @@ app.use('/api/orders', createProxyMiddleware({
   target: 'http://localhost:5003',
   changeOrigin: true
 }));
+
 app.use('/api/carts', createProxyMiddleware({
   target: 'http://localhost:5006',
   changeOrigin: true
 }));
+
 app.use('/api/items', createProxyMiddleware({
   target: 'http://localhost:5002',
   changeOrigin: true

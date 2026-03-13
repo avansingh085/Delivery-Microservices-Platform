@@ -73,3 +73,4 @@ export const deleteItem = asyncHandler(async (req, res) => {
   await RedisSet(`item_by_id_${itemId}`, null);
   return sendSuccess(res, deletedItem, HttpStatus.SUCCESS, "Item successfully deleted");
 });
+

@@ -86,6 +86,8 @@ export const refreshAccessToken = asyncHandler(async (req, res) => {
   sendSuccess(res, { message: "Access token refreshed" }, HttpStatus.SUCCESS);
 });
 
+
+
 export const sendOtp = asyncHandler(async (req, res) => {
   const { email } = req.body;
   if (!email) return sendError(res, "Invalid email", HttpStatus.BAD_REQUEST);
@@ -99,6 +101,8 @@ export const sendOtp = asyncHandler(async (req, res) => {
 
   sendSuccess(res, { otp: newOtp, message: "OTP sent successfully" }, HttpStatus.SUCCESS);
 });
+
+
 
 export const forgotPassword = asyncHandler(async (req, res) => {
   const { password, otp, email } = req.body;

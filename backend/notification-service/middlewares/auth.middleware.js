@@ -8,9 +8,7 @@ export const protect = (req, res, next) => {
     if (!token) throw new Error("Unauthorized");
 
     const decoded = jwt.verify(token, JWT_ACCESS_SECRET);
-    console.log(decoded);
     req.user = decoded;
-
     next();
   } catch (err) {
     console.log(err);
