@@ -6,7 +6,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 import orderRoutes from './routes/order.route.js';
-import { globalErrorHandler } from './middlewars/error.middlewars.js';
+import { globalErrorHandler } from './middlewares/error.middleware.js';
 import connectDB from './config/db.config.js';
 import { connectConsumer, connectProducer } from './config/kafka.config.js';
 import { consumeOrderEvents } from './kafka/order.consumer.js';
@@ -22,6 +22,7 @@ app.use(cors({
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
 app.use("/", orderRoutes);
 
 

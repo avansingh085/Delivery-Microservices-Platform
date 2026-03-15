@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 
 import paymentRoutes from './routes/payment.route.js';
-import { globalErrorHandler } from './middlewars/error.middlewars.js';
+import { globalErrorHandler } from './middlewares/error.middleware.js';
 import cookieParser from 'cookie-parser';
 import connectDB from './config/db.config.js';
 import { connectConsumer, connectProducer } from './config/kafka.js';

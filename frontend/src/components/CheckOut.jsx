@@ -6,7 +6,6 @@ import { createOrder } from '../api/orderApi';
 const Checkout = ({ amount, cartItems }) => {
   const [paymentMethod, setPaymentMethod] = useState('online'); 
   const [loading, setLoading] = useState(false);
-
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
       const script = document.createElement('script');
@@ -29,8 +28,10 @@ const Checkout = ({ amount, cartItems }) => {
       const res = await apiClient.post('/payments/checkout',
        { amount, paymentMethod: 'ONLINE', items: cartItems },
       );
-      const data = res.data;
+      const data = res.data.data;
+      console.log(data);
       const orderData = data.order; 
+      
 
       const options = {
         key: 'rzp_test_SImjKLecBguwt4',
@@ -38,7 +39,7 @@ const Checkout = ({ amount, cartItems }) => {
         currency: orderData?.currency||"INR",
         name: 'Delivery System',
         description: 'item buy',
-        order_id: orderData.id,
+        order_id: data.transaction.razorpay_order_id,
         handler: async function (response) {
            await apiClient.post('/payments/verify',{...response,cartItems});
           console.log("Payment Successful!", response);
@@ -84,7 +85,8 @@ const Checkout = ({ amount, cartItems }) => {
     }
   };
 
-  const handleSubmit = async () => {
+  
+const handleSubmit = async () => {
     setLoading(true);
     if (paymentMethod === 'online') {
       await handleOnlinePayment();
@@ -93,7 +95,7 @@ const Checkout = ({ amount, cartItems }) => {
     }
     setLoading(false);
   };
-
+  
   return (
     <div style={{ padding: '20px', border: '1px solid #eaeaea', borderRadius: '8px', maxWidth: '400px' }}>
       <h3>Checkout</h3>

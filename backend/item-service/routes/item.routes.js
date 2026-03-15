@@ -1,5 +1,5 @@
 import express from 'express';
-import { protect } from '../middlewares/auth.middlewars.js';
+import { protect } from '../middlewares/auth.middleware.js';
 import { addNewItem, deleteItem, updateItem, getItemById, getListOfItem } from '../controllers/item.controllers.js';
 const app = express();
 app.get("/", getListOfItem);

@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import cartRoutes from '../cart-service/routes/cart.routes.js';
 import cookieParser from 'cookie-parser';
-import { globalErrorHandler } from './middlewars/error.middlewars.js';
+import { globalErrorHandler } from './middlewares/error.middleware.js';
 import connectDB from './config/db.js';
 import { connectConsumer, connectProducer } from './config/kafka.js';
 import { consumeCartEvents } from './kafka/cart.consumer.js';

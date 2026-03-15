@@ -1,5 +1,5 @@
 import express from 'express';
-import { globalErrorHandler } from './middlewares/error.middlewars.js';
+import { globalErrorHandler } from './middlewares/error.middleware.js';
 import connectDB from './config/db.js';
 import cors from 'cors';
 import ItemRoutes from './routes/item.routes.js';

@@ -1,5 +1,5 @@
 import { RedisGet, RedisSet } from "../config/redis.config.js";
-import Cart from "../models/cart.models.js";
+import Cart from "../models/cart.model.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import { sendSuccess, sendError } from "../utils/response.js";
 import HttpStatus from "../utils/httpStatus.js";
@@ -53,6 +53,8 @@ export const updateCartItem = asyncHandler(async (req, res) => {
 
   return sendSuccess(res, cartItem, HttpStatus.SUCCESS, "Cart item updated successfully");
 });
+
+
 
 export const deleteCartItem = asyncHandler(async (req, res) => {
   const userId = req.user.userId;
