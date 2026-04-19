@@ -69,7 +69,7 @@ services:
     build: ./backend/item-service
     container_name: item-service
     env_file:
-      - ./backend/items-service/.env
+      - ./backend/item-service/.env
     ports:
       - "5003:5003"
     restart: always
