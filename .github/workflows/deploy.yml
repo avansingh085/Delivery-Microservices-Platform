@@ -25,7 +25,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd delivery
+            cd Delivery-Microservices-Platform
             git pull
             docker compose down
             docker compose up -d --build
