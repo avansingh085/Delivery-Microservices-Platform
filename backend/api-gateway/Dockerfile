@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY package*.json ./
 
-# install only production deps
+
 RUN npm install --omit=dev
 
 COPY . .
